@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 
-import { UserEntity } from './user.entity'
+import { UserEntity } from '../../entities/user.entity'
 
 export const JOKE_TABLE_NAME = 'joke'
 @Entity(JOKE_TABLE_NAME)
