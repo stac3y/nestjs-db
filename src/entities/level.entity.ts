@@ -1,9 +1,11 @@
-import { Entity, Column } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
-import { CommonBaseEntity } from './common-base-entity.entity'
+export const LEVEL_TABLE_NAME = 'level'
+@Entity(LEVEL_TABLE_NAME)
+export class LevelEntity {
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
-@Entity('levels')
-export class LevelEntity extends CommonBaseEntity {
-    @Column()
+    @Column({ type: String })
     name: string
 }

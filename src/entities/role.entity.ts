@@ -1,9 +1,11 @@
-import { Entity, Column } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
-import { CommonBaseEntity } from './common-base-entity.entity'
+export const ROLE_TABLE_NAME = 'role'
+@Entity(ROLE_TABLE_NAME)
+export class RoleEntity {
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
-@Entity('roles')
-export class RoleEntity extends CommonBaseEntity {
-    @Column()
+    @Column({ type: String })
     name: string
 }

@@ -12,10 +12,10 @@ export class CommonBaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @CreateDateColumn({ type: 'timestamp with time zone', name: 'created_at' })
+    @CreateDateColumn({ type: 'timestamp with time zone' })
     createdAt: Date
 
-    @DeleteDateColumn({ type: 'timestamp with time zone', name: 'deleted_at' })
+    @DeleteDateColumn({ type: 'timestamp with time zone' })
     deletedAt?: Date
 
     get isDeleted(): boolean {

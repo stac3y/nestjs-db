@@ -1,12 +1,26 @@
-import { Entity, Column } from 'typeorm'
+import {
+    Entity,
+    Column,
+    OneToOne,
+    JoinColumn,
+    PrimaryGeneratedColumn,
+} from 'typeorm'
 
-import { CommonBaseEntity } from './common-base-entity.entity'
+import { LevelEntity } from './level.entity'
 
-@Entity('groups')
-export class GroupEntity extends CommonBaseEntity {
-    @Column()
+export const GROUP_TABLE_NAME = 'group'
+@Entity(GROUP_TABLE_NAME)
+export class GroupEntity {
+    @PrimaryGeneratedColumn('uuid')
+    id: string
+
+    @Column({ type: String })
     name: string
 
-    @Column()
+    @Column({ type: String })
     shortname: string
+
+    @OneToOne(() => LevelEntity, (level) => level.id)
+    @JoinColumn()
+    level: LevelEntity
 }

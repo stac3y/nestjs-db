@@ -1,9 +1,11 @@
-import { Entity, Column } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
-import { CommonBaseEntity } from './common-base-entity.entity'
+export const STATUS_TABLE_NAME = 'status'
+@Entity(STATUS_TABLE_NAME)
+export class StatusEntity {
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
-@Entity('statuses')
-export class StatusEntity extends CommonBaseEntity {
-    @Column()
+    @Column({ type: String })
     name: string
 }

@@ -1,21 +1,28 @@
-import { Entity, Column } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 
-import { CommonBaseEntity } from './common-base-entity.entity'
+import { UserEntity } from './user.entity'
 
-@Entity('jokes')
-export class JokeEntity extends CommonBaseEntity {
-    @Column()
+export const JOKE_TABLE_NAME = 'joke'
+@Entity(JOKE_TABLE_NAME)
+export class JokeEntity {
+    @PrimaryGeneratedColumn('uuid')
+    id: string
+
+    @Column({ type: String })
     name: string
 
-    @Column()
+    @Column({ type: String })
     text: string
-    
-    @Column()
+
+    @Column({ type: Number })
     rate: number
 
-    @Column()
+    @Column({ type: Number })
     like: number
 
-    @Column()
+    @Column({ type: Number })
     view: number
+
+    @ManyToOne(() => UserEntity, (user) => user.id)
+    user: UserEntity
 }
