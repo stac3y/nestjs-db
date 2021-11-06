@@ -21,7 +21,7 @@ export class JokesService {
 
     async createJoke(input: JokeDTO): Promise<JokeEntity> {
         try {
-            const { name, text, rate, like, view } = input
+            const { name, text, rate, like, view, user } = input
 
             const joke = this._jokesRepository.create({
                 name,
@@ -29,6 +29,7 @@ export class JokesService {
                 rate,
                 like,
                 view,
+                user,
             })
 
             return await this._jokesRepository.save(joke)

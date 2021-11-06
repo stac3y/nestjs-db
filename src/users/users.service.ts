@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import { GroupsService } from '../groups/groups.service'
+import { GroupEntity } from 'src/groups/entities/group.entity'
 
 import { UserDTO } from './dtos/user.dto'
 import { UserInGroup } from './entities/user-in-group.entity'
@@ -22,18 +22,19 @@ export class UsersService {
         private readonly _usersRepository: Repository<UserEntity>,
         @InjectRepository(UserInGroup)
         private readonly _userInGroupRepository: Repository<UserInGroup>,
-        private readonly _groupsService: GroupsService,
     ) {}
 
     async createUser(input: UserDTO): Promise<UserEntity> {
         try {
-            const { name, surname, login, password } = input
+            const { name, surname, login, password, role, status } = input
 
             const user = this._usersRepository.create({
                 name,
                 surname,
                 login,
                 password,
+                role,
+                status,
             })
 
             return await this._usersRepository.save(user)
@@ -44,13 +45,10 @@ export class UsersService {
     }
 
     async addUserToGroup(
-        userId: string,
-        groupId: string,
+        user: UserEntity,
+        group: GroupEntity,
     ): Promise<UserInGroup> {
         try {
-            const user = await this.getUserById(userId)
-            const group = await this._groupsService.getGroupById(groupId)
-
             const userInGroup = this._userInGroupRepository.create({
                 user,
                 group,

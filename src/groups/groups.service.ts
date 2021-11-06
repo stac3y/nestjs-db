@@ -21,11 +21,12 @@ export class GroupsService {
 
     async createGroup(input: GroupDTO): Promise<GroupEntity> {
         try {
-            const { name, shortname } = input
+            const { name, shortname, level } = input
 
             const group = this._groupsRepository.create({
                 name,
                 shortname,
+                level
             })
 
             return await this._groupsRepository.save(group)
