@@ -6,9 +6,9 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm'
 
-import { LevelEntity } from './level.entity'
+import { LevelEntity } from '../../levels/entities/level.entity'
 
-export const GROUP_TABLE_NAME = 'group'
+export const GROUP_TABLE_NAME = 'groups'
 @Entity(GROUP_TABLE_NAME)
 export class GroupEntity {
     @PrimaryGeneratedColumn('uuid')
