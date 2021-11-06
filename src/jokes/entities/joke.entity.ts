@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 
 import { UserEntity } from '../../users/entities/user.entity'
 
-export const JOKE_TABLE_NAME = 'joke'
+export const JOKE_TABLE_NAME = 'jokes'
 @Entity(JOKE_TABLE_NAME)
 export class JokeEntity {
     @PrimaryGeneratedColumn('uuid')
