@@ -38,7 +38,7 @@ export class JokesService {
         }
     }
 
-    async geJokeByUserId(userId: string): Promise<JokeEntity> {
+    async getJokeByUserId(userId: string): Promise<JokeEntity> {
         try {
             const joke = await this._jokesRepository.findOne({
                 where: {
@@ -54,7 +54,7 @@ export class JokesService {
 
             return joke
         } catch (error) {
-            this._logger.error(error, 'geJokeByUserId method error')
+            this._logger.error(error, 'getJokeByUserId method error')
 
             if (error instanceof NotFoundException) {
                 throw error

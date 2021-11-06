@@ -1,10 +1,11 @@
 import { Entity, Column, ManyToOne } from 'typeorm'
 
-import { CommonBaseEntity } from './common-base-entity.entity'
-import { RoleEntity } from './role.entity'
-import { StatusEntity } from './status.entity'
+import { RoleEntity } from '../../roles/entities/role.entity'
+import { StatusEntity } from '../../statuses/entities/status.entity'
 
-export const USER_TABLE_NAME = 'user'
+import { CommonBaseEntity } from './common-base-entity.entity'
+
+export const USER_TABLE_NAME = 'users'
 @Entity(USER_TABLE_NAME)
 export class UserEntity extends CommonBaseEntity {
     @Column({ type: String })
