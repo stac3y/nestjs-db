@@ -2,7 +2,7 @@ import { HttpModule, Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { StatusEntity } from './entities/status.entity'
+import { StatusEntity } from './schemas/status.schema'
 import { StatusesService } from './stasuses.service'
 
 @Module({

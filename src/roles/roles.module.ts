@@ -2,7 +2,7 @@ import { HttpModule, Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { RoleEntity } from './entities/role.entity'
+import { RoleEntity } from './schemas/role.schema'
 import { RolesService } from './roles.service'
 
 @Module({

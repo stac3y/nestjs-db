@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import { UserEntity } from 'src/users/entities/user.entity'
+import { UserEntity } from 'src/users/schemas/user.schema'
 
 @ObjectType('Joke')
 export class JokeDTO {
