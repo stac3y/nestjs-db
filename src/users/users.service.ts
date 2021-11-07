@@ -4,30 +4,26 @@ import {
     Logger,
     NotFoundException,
 } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
 
-import { GroupEntity } from 'src/groups/entities/group.entity'
 import { GroupsService } from 'src/groups/groups.service'
+// import { Group, GroupDocument } from 'src/groups/schemas/group.schema'
 import { JokesService } from 'src/jokes/jokes.service'
 import { LevelsService } from 'src/levels/levels.service'
 import { RolesService } from 'src/roles/roles.service'
 import { StatusesService } from 'src/statuses/stasuses.service'
 
 import { UserDTO } from './dtos/user.dto'
-import { UserInGroup } from './entities/user-in-group.entity'
-import { UserEntity } from './entities/user.entity'
 import { EntitiesType, ResultType } from './graphql/types/entities.type'
+import { User, UserDocument } from './schemas/user.schema'
 
 @Injectable()
 export class UsersService {
     private _logger = new Logger(UsersService.name)
 
     constructor(
-        @InjectRepository(UserEntity)
-        private readonly _usersRepository: Repository<UserEntity>,
-        @InjectRepository(UserInGroup)
-        private readonly _userInGroupRepository: Repository<UserInGroup>,
+        @InjectModel(User.name) private _userModel: Model<UserDocument>,
         private readonly _groupsService: GroupsService,
         private readonly _jokesService: JokesService,
         private readonly _levelsService: LevelsService,
@@ -35,27 +31,19 @@ export class UsersService {
         private readonly _statusesService: StatusesService,
     ) {}
 
-    async createUser(input: UserDTO): Promise<UserEntity> {
+    async createUser(input: UserDTO): Promise<User> {
         try {
-            const { name, surname, login, password, role, status } = input
+            
+            const user = new this._userModel(input)
 
-            const user = this._usersRepository.create({
-                name,
-                surname,
-                login,
-                password,
-                role,
-                status,
-            })
-
-            return await this._usersRepository.save(user)
+            return await user.save()
         } catch (error) {
             this._logger.error(error, 'createUser method error')
             throw new InternalServerErrorException(error)
         }
     }
 
-    async addUserToGroup(
+    /* async addUserToGroup(
         user: UserEntity,
         group: GroupEntity,
     ): Promise<UserInGroup> {
@@ -70,15 +58,11 @@ export class UsersService {
             this._logger.error(error, 'addUserToGroup method error')
             throw new InternalServerErrorException(error)
         }
-    }
+    } */
 
-    async getUserById(id: string): Promise<UserEntity> {
+    async getUserById(id: string): Promise<User> {
         try {
-            const user = await this._usersRepository.findOne({
-                where: {
-                    id,
-                },
-            })
+            const user = await this._userModel.findById(id)
 
             if (!user) {
                 throw new NotFoundException(
@@ -99,7 +83,7 @@ export class UsersService {
     }
 
     async createEntities(): Promise<void> {
-        const level = await this._levelsService.createLevel({
+       const level = await this._levelsService.createLevel({
             name: 'high',
         })
 

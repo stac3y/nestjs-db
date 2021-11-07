@@ -1,17 +1,13 @@
-import { HttpModule, Module } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module } from "@nestjs/common"
+import { MongooseModule } from "@nestjs/mongoose"
 
-import { JokeEntity } from './entities/joke.entity'
-import { JokesService } from './jokes.service'
+import { JokesService } from "./jokes.service"
+import { Joke, JokeSchema } from "./schemas/joke.schema"
 
 @Module({
-    imports: [
-        HttpModule,
-        ConfigService,
-        TypeOrmModule.forFeature([JokeEntity]),
-    ],
-    providers: [JokesService],
-    exports: [JokesService],
+  imports: [MongooseModule.forFeature([
+    {name: Joke.name, schema: JokeSchema}
+  ])],
+  providers: [JokesService]
 })
 export class JokesModule {}

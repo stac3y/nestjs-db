@@ -4,52 +4,38 @@ import {
     Logger,
     NotFoundException,
 } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
 
 import { JokeDTO } from './dtos/joke.dto'
-import { JokeEntity } from './entities/joke.entity'
+import { Joke, JokeDocument } from './schemas/joke.schema'
 
 @Injectable()
 export class JokesService {
     private _logger = new Logger(JokesService.name)
 
     constructor(
-        @InjectRepository(JokeEntity)
-        private readonly _jokesRepository: Repository<JokeEntity>,
+        @InjectModel(Joke.name) private _jokeModel: Model<JokeDocument>,
     ) {}
 
-    async createJoke(input: JokeDTO): Promise<JokeEntity> {
+    async createJoke(input: JokeDTO): Promise<Joke> {
         try {
-            const { name, text, rate, like, view, user } = input
+            const joke = new this._jokeModel(input)
 
-            const joke = this._jokesRepository.create({
-                name,
-                text,
-                rate,
-                like,
-                view,
-                user,
-            })
-
-            return await this._jokesRepository.save(joke)
+            return await joke.save()
         } catch (error) {
             this._logger.error(error, 'createJoke method error')
             throw new InternalServerErrorException(error)
         }
     }
 
-    async getJokeByUserId(userId: string): Promise<JokeEntity> {
+    async getJokeById(id: string): Promise<Joke> {
         try {
-            const joke = await this._jokesRepository.findOne({
-                where: {
-                    userId,
-                },
-            })
+            const joke = await this._jokeModel.findById(id)
 
             if (!joke) {
                 throw new NotFoundException(
-                    `Joke with this userId: ${userId} not found`,
+                    `Joke with this id: ${id} not found`,
                 )
             }
 

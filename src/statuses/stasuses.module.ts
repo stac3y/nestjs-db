@@ -1,17 +1,13 @@
-import { HttpModule, Module } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module } from "@nestjs/common"
+import { MongooseModule } from "@nestjs/mongoose"
 
-import { StatusEntity } from './schemas/status.schema'
-import { StatusesService } from './stasuses.service'
+import { Status, StatusSchema } from "./schemas/status.schema"
+import { StatusesService } from "./stasuses.service"
 
 @Module({
-    imports: [
-        HttpModule,
-        ConfigService,
-        TypeOrmModule.forFeature([StatusEntity]),
-    ],
-    providers: [StatusesService],
-    exports: [StatusesService],
+  imports: [MongooseModule.forFeature([
+    {name: Status.name, schema: StatusSchema}
+  ])],
+  providers: [StatusesService]
 })
 export class StatusesModule {}

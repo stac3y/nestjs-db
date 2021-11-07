@@ -1,17 +1,13 @@
-import { HttpModule, Module } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module } from "@nestjs/common"
+import { MongooseModule } from "@nestjs/mongoose"
 
-import { GroupEntity } from './entities/group.entity'
-import { GroupsService } from './groups.service'
+import { GroupsService } from "./groups.service"
+import { Group, GroupSchema } from "./schemas/group.schema"
 
 @Module({
-    imports: [
-        HttpModule,
-        ConfigService,
-        TypeOrmModule.forFeature([GroupEntity]),
-    ],
-    providers: [GroupsService],
-    exports: [GroupsService],
+  imports: [MongooseModule.forFeature([
+    {name: Group.name, schema: GroupSchema}
+  ])],
+  providers: [GroupsService]
 })
 export class GroupsModule {}

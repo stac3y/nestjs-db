@@ -4,43 +4,33 @@ import {
     Logger,
     NotFoundException,
 } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
 
 import { StatusDTO } from './dtos/status.dto'
-import { StatusEntity } from './schemas/status.schema'
+import { Status, StatusDocument } from './schemas/status.schema'
 
 @Injectable()
 export class StatusesService {
     private _logger = new Logger(StatusesService.name)
 
     constructor(
-        @InjectRepository(StatusEntity)
-        private readonly _statusesRepository: Repository<StatusEntity>,
+        @InjectModel(Status.name) private _statusModel: Model<StatusDocument>,
     ) {}
-
-    async createStatus(input: StatusDTO): Promise<StatusEntity> {
+    async createStatus(input: StatusDTO): Promise<Status> {
         try {
-            const { name } = input
+            const status = new this._statusModel(input)
 
-            const status = this._statusesRepository.create({
-                name,
-            })
-
-            return await this._statusesRepository.save(status)
+            return await status.save()
         } catch (error) {
             this._logger.error(error, 'createStatus method error')
             throw new InternalServerErrorException(error)
         }
     }
 
-    async getStatusById(id: string): Promise<StatusEntity> {
+    async getStatusById(id: string): Promise<Status> {
         try {
-            const status = await this._statusesRepository.findOne({
-                where: {
-                    id,
-                },
-            })
+            const status = await this._statusModel.findById(id)
 
             if (!status) {
                 throw new NotFoundException(

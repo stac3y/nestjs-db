@@ -1,7 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import { LevelEntity } from '../../levels/entities/level.entity'
-
 @ObjectType('Group')
 export class GroupDTO {
     @Field(() => String)
@@ -9,7 +7,4 @@ export class GroupDTO {
 
     @Field(() => String)
     shortname: string
-
-    @Field(() => LevelEntity)
-    level: LevelEntity
 }

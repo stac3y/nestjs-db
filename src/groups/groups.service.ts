@@ -1,48 +1,26 @@
-import {
-    Injectable,
-    InternalServerErrorException,
-    Logger,
-    NotFoundException,
-} from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
 
 import { GroupDTO } from './dtos/group.dto'
-import { GroupEntity } from './entities/group.entity'
+import { Group, GroupDocument } from './schemas/group.schema'
 
 @Injectable()
 export class GroupsService {
     private _logger = new Logger(GroupsService.name)
 
     constructor(
-        @InjectRepository(GroupEntity)
-        private readonly _groupsRepository: Repository<GroupEntity>,
+        @InjectModel(Group.name) private _groupModel: Model<GroupDocument>,
     ) {}
 
-    async createGroup(input: GroupDTO): Promise<GroupEntity> {
-        try {
-            const { name, shortname, level } = input
-
-            const group = this._groupsRepository.create({
-                name,
-                shortname,
-                level
-            })
-
-            return await this._groupsRepository.save(group)
-        } catch (error) {
-            this._logger.error(error, 'createGroup method error')
-            throw new InternalServerErrorException(error)
-        }
+    async createGroup(input: GroupDTO): Promise<Group> {
+        const group = new this._groupModel(input)
+        return await group.save()
     }
 
-    async getGroupById(id: string): Promise<GroupEntity> {
+    async getGroupById(id: string): Promise<Group> {
         try {
-            const group = await this._groupsRepository.findOne({
-                where: {
-                    id,
-                },
-            })
+            const group = await this._groupModel.findById(id)
 
             if (!group) {
                 throw new NotFoundException(

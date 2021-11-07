@@ -4,43 +4,34 @@ import {
     Logger,
     NotFoundException,
 } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
 
 import { RoleDTO } from './dtos/role.dto'
-import { RoleEntity } from './entities/role.entity'
+import { Role, RoleDocument } from './schemas/role.schema'
 
 @Injectable()
 export class RolesService {
     private _logger = new Logger(RolesService.name)
 
     constructor(
-        @InjectRepository(RoleEntity)
-        private readonly _rolesRepository: Repository<RoleEntity>,
+        @InjectModel(Role.name) private _roleModel: Model<RoleDocument>,
     ) {}
 
-    async createRole(input: RoleDTO): Promise<RoleEntity> {
+    async createRole(input: RoleDTO): Promise<Role> {
         try {
-            const { name } = input
+            const role = new this._roleModel(input)
 
-            const role = this._rolesRepository.create({
-                name,
-            })
-
-            return await this._rolesRepository.save(role)
+            return await role.save()
         } catch (error) {
             this._logger.error(error, 'createRole method error')
             throw new InternalServerErrorException(error)
         }
     }
 
-    async getRoleById(id: string): Promise<RoleEntity> {
+    async getRoleById(id: string): Promise<Role> {
         try {
-            const role = await this._rolesRepository.findOne({
-                where: {
-                    id
-                },
-            })
+            const role = await this._roleModel.findById(id)
 
             if (!role) {
                 throw new NotFoundException(

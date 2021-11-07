@@ -1,17 +1,13 @@
-import { HttpModule, Module } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module } from "@nestjs/common"
+import { MongooseModule } from "@nestjs/mongoose"
 
-import { LevelEntity } from './entities/level.entity'
-import { LevelsService } from './levels.service'
+import { LevelsService } from "./levels.service"
+import { Level, LevelSchema } from "./schemas/level.schema"
 
 @Module({
-    imports: [
-        HttpModule,
-        ConfigService,
-        TypeOrmModule.forFeature([LevelEntity]),
-    ],
-    providers: [LevelsService],
-    exports: [LevelsService],
+  imports: [MongooseModule.forFeature([
+    {name: Level.name, schema: LevelSchema}
+  ])],
+  providers: [LevelsService]
 })
 export class LevelsModule {}
