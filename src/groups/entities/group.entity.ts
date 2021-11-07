@@ -23,4 +23,7 @@ export class GroupEntity {
     @OneToOne(() => LevelEntity, (level) => level.id)
     @JoinColumn()
     level: LevelEntity
+
+    @Column({ type: String })
+    levelId: string
 }

@@ -43,7 +43,7 @@ export class JokesService {
         try {
             const joke = await this._jokesRepository.findOne({
                 where: {
-                    user: userId,
+                    userId,
                 },
             })
 

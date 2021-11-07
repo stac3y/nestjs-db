@@ -1,4 +1,4 @@
-import { Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, ManyToOne } from 'typeorm'
 
 import { GroupEntity } from '../../groups/entities/group.entity'
 
@@ -11,6 +11,12 @@ export class UserInGroup extends CommonBaseEntity {
     @ManyToOne(() => UserEntity, (user) => user.id)
     user: UserEntity
 
+    @Column({ type: String })
+    userId: string
+
     @ManyToOne(() => GroupEntity, (group) => group.id)
     group: GroupEntity
+
+    @Column({ type: String })
+    groupId: string
 }

@@ -17,6 +17,7 @@ import { StatusesService } from 'src/statuses/stasuses.service'
 import { UserDTO } from './dtos/user.dto'
 import { UserInGroup } from './entities/user-in-group.entity'
 import { UserEntity } from './entities/user.entity'
+import { EntitiesType, ResultType } from './graphql/types/entities.type'
 
 @Injectable()
 export class UsersService {
@@ -155,5 +156,47 @@ export class UsersService {
         })
 
         await this.addUserToGroup(user, group)
+    }
+
+    async getEntities(amount: number): Promise<ResultType> {
+        const users = await this._usersRepository.find({ take: amount })
+        if (users.length <= 0) {
+            throw new NotFoundException(`Could not find ${amount} users`)
+        }
+        const promises = []
+        for (const user of users) {
+            promises.push(this.getEntity(user))
+        }
+        const response = { result: await Promise.all(promises) }
+
+        return response
+    }
+
+    async getEntity(user: UserEntity): Promise<EntitiesType> {
+        const joke = await this._jokesService.getJokeByUserId(user.id)
+        const status = await this._statusesService.getStatusById(user.statusId)
+        const role = await this._rolesService.getRoleById(user.roleId)
+        const userInGroup = await this._userInGroupRepository.findOne({
+            where: {
+                user,
+            },
+        })
+        if (!userInGroup) {
+            throw new NotFoundException(`User in group not found`)
+        }
+        const group = await this._groupsService.getGroupById(
+            userInGroup.groupId,
+        )
+        const level = await this._levelsService.getLevelById(group.levelId)
+        const response: EntitiesType = {
+            group,
+            joke,
+            level,
+            role,
+            status,
+            user,
+        }
+
+        return response
     }
 }

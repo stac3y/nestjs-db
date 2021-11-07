@@ -2,7 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 
 import { CreateEntitiesInput } from './graphql/inputs/create-entities.input'
 import { CreateEntitiesType } from './graphql/types/create-entities.type'
-// import { EntitiesType } from './graphql/types/entities.type'
+import { ResultType } from './graphql/types/entities.type'
 import { UsersService } from './users.service'
 
 @Resolver(() => String)
@@ -34,27 +34,12 @@ export class UsersResolver {
         return response
     }
 
-    /* @Query(() => AuthType)
-    async signIn(@Args('input') input: CreateUserInput): Promise<AuthType> {
-        const response = await this._authService.signIn(input)
-
+    @Query(() => ResultType)
+    async getEntities(
+        @Args('input') input: CreateEntitiesInput,
+    ): Promise<ResultType> {
+        const { amount } = input
+        const response = await this._usersService.getEntities(amount)
         return response
     }
-
-    @UseGuards(AuthGuard)
-    @Mutation(() => String)
-    async protectedMethod(): Promise<string> {
-        return 'Authorization was successful'
-    }
-
-    @Mutation(() => AuthType)
-    async refreshToken(
-        @Args('refreshToken') refreshToken: string,
-        @Args('accessToken') accessToken: string,
-    ): Promise<AuthType> {
-        return await this._authService.getAccessTokenFromRefreshToken(
-            refreshToken,
-            accessToken,
-        )
-    } */
 }

@@ -6,15 +6,61 @@ type CreateEntities {
   message: String!
 }
 
+type Group {
+  name: String!
+  shortname: String!
+}
+
+type Joke {
+  name: String!
+  text: String!
+  rate: Float!
+  like: Float!
+  view: Float!
+}
+
+type Level {
+  name: String!
+}
+
+type Role {
+  name: String!
+}
+
+type Status {
+  name: String!
+}
+
+type User {
+  name: String!
+  surname: String!
+  login: String!
+  password: String!
+}
+
+type Entities {
+  group: Group!
+  joke: Joke!
+  level: Level!
+  role: Role!
+  status: Status!
+  user: User!
+}
+
+type Result {
+  result: [Entities!]!
+}
+
 type Query {
   """Returns pong"""
   ping: String!
-}
-
-type Mutation {
-  createEntities(input: CreateEntitiesInput!): CreateEntities!
+  getEntities(input: CreateEntitiesInput!): Result!
 }
 
 input CreateEntitiesInput {
   amount: Float!
+}
+
+type Mutation {
+  createEntities(input: CreateEntitiesInput!): CreateEntities!
 }

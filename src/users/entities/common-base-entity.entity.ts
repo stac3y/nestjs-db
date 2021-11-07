@@ -1,3 +1,4 @@
+import { Field } from '@nestjs/graphql'
 import {
     CreateDateColumn,
     DeleteDateColumn,
@@ -9,12 +10,15 @@ import {
  */
 export class CommonBaseEntity {
     /** Auto generated uuid v4 */
+    @Field()
     @PrimaryGeneratedColumn('uuid')
     id: string
 
+    @Field()
     @CreateDateColumn({ type: 'timestamp with time zone' })
     createdAt: Date
 
+    @Field()
     @DeleteDateColumn({ type: 'timestamp with time zone' })
     deletedAt?: Date
 

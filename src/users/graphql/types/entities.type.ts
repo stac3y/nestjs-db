@@ -1,29 +1,89 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import { GroupDTO } from '../../../groups/dtos/group.dto'
-import { JokeDTO } from '../../../jokes/dtos/joke.dto'
-import { LevelDTO } from '../../../levels/dtos/level.dto'
-import { RoleDTO } from '../../../roles/dtos/role.dto'
-import { StatusDTO } from '../../../statuses/dtos/status.dto'
-import { UserDTO } from '../../dtos/user.dto'
+@ObjectType('Group')
+export class GroupType {
+    @Field(() => String)
+    name: string
+
+    @Field(() => String)
+    shortname: string
+}
+
+@ObjectType('Joke')
+export class JokeType {
+    @Field(() => String)
+    name: string
+
+    @Field(() => String)
+    text: string
+
+    @Field(() => Number)
+    rate: number
+
+    @Field(() => Number)
+    like: number
+
+    @Field(() => Number)
+    view: number
+}
+
+@ObjectType('Level')
+export class LevelType {
+    @Field(() => String)
+    name: string
+}
+
+@ObjectType('Role')
+export class RoleType {
+    @Field(() => String)
+    name: string
+}
+
+@ObjectType('Status')
+export class StatusType {
+    @Field(() => String)
+    name: string
+}
+
+@ObjectType('User')
+export class UserType {
+    @Field(() => String)
+    name: string
+
+    @Field(() => String)
+    surname: string
+
+    @Field(() => String)
+    login: string
+
+    @Field(() => String)
+    password: string
+
+}
 
 @ObjectType('Entities')
 export class EntitiesType {
-    @Field()
-    group: GroupDTO
+    @Field(() => GroupType)
+    group: GroupType
 
-    @Field()
-    joke: JokeDTO
+    @Field(() => JokeType)
+    joke: JokeType
 
-    @Field()
-    level: LevelDTO
+    @Field(() => LevelType)
+    level?: LevelType
 
-    @Field()
-    role: RoleDTO
+    @Field(() => RoleType)
+    role: RoleType
+    
+    @Field(() => StatusType)
+    status: StatusType
 
-    @Field()
-    status: StatusDTO
+    @Field(() => UserType)
+    user: UserType
+}
 
-    @Field()
-    user: UserDTO
+@ObjectType('Result')
+export class ResultType {
+    @Field(() => [EntitiesType])
+    result: EntitiesType[]
 }

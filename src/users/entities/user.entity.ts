@@ -23,6 +23,12 @@ export class UserEntity extends CommonBaseEntity {
     @ManyToOne(() => RoleEntity, (role) => role.id, { nullable: true })
     role: RoleEntity
 
+    @Column({ type: String })
+    roleId: string
+
     @ManyToOne(() => StatusEntity, (status) => status.id)
     status: StatusEntity
+
+    @Column({ type: String })
+    statusId: string
 }
