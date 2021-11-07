@@ -5,10 +5,12 @@ import {
     NotFoundException,
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import { Model, Types } from 'mongoose'
 
 import { JokeDTO } from './dtos/joke.dto'
 import { Joke, JokeDocument } from './schemas/joke.schema'
+
+const {ObjectId} = Types
 
 @Injectable()
 export class JokesService {
@@ -29,13 +31,15 @@ export class JokesService {
         }
     }
 
-    async getJokeById(id: string): Promise<Joke> {
+    async getJokeByUserId(userId: string): Promise<Joke> {
         try {
-            const joke = await this._jokeModel.findById(id)
+            ObjectId(userId)
+            
+            const joke = await this._jokeModel.findOne()
 
             if (!joke) {
                 throw new NotFoundException(
-                    `Joke with this id: ${id} not found`,
+                    `Joke with this userId: ${userId} not found`,
                 )
             }
 

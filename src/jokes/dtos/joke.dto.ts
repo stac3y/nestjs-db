@@ -1,5 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
+import { User } from '../../users/schemas/user.schema'
+
 @ObjectType('Joke')
 export class JokeDTO {
     @Field(() => String)
@@ -16,4 +18,7 @@ export class JokeDTO {
 
     @Field(() => Number)
     view: number
+
+    @Field(() => User)
+    user: User
 }

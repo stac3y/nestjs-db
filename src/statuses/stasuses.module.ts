@@ -8,6 +8,7 @@ import { StatusesService } from "./stasuses.service"
   imports: [MongooseModule.forFeature([
     {name: Status.name, schema: StatusSchema}
   ])],
-  providers: [StatusesService]
+  providers: [StatusesService],
+  exports: [StatusesService],
 })
 export class StatusesModule {}

@@ -8,6 +8,7 @@ import { Group, GroupSchema } from "./schemas/group.schema"
   imports: [MongooseModule.forFeature([
     {name: Group.name, schema: GroupSchema}
   ])],
-  providers: [GroupsService]
+  providers: [GroupsService],
+  exports: [GroupsService],
 })
 export class GroupsModule {}

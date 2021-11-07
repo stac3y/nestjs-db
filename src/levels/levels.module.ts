@@ -8,6 +8,7 @@ import { Level, LevelSchema } from "./schemas/level.schema"
   imports: [MongooseModule.forFeature([
     {name: Level.name, schema: LevelSchema}
   ])],
-  providers: [LevelsService]
+  providers: [LevelsService],
+  exports: [LevelsService],
 })
 export class LevelsModule {}

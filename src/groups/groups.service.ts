@@ -18,7 +18,7 @@ export class GroupsService {
         return await group.save()
     }
 
-    async getGroupById(id: string): Promise<Group> {
+    async getGroupById(id?: string): Promise<Group> {
         try {
             const group = await this._groupModel.findById(id)
 

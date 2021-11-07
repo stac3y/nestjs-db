@@ -8,6 +8,7 @@ import { Joke, JokeSchema } from "./schemas/joke.schema"
   imports: [MongooseModule.forFeature([
     {name: Joke.name, schema: JokeSchema}
   ])],
-  providers: [JokesService]
+  providers: [JokesService],
+  exports: [JokesService],
 })
 export class JokesModule {}

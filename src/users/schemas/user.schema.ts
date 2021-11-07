@@ -2,9 +2,9 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Types } from 'mongoose'
 
 import { Group } from '../../groups/schemas/group.schema'
+import { Joke } from '../../jokes/schemas/joke.schema'
 import { Role } from '../../roles/schemas/role.schema'
 import { Status } from '../../statuses/schemas/status.schema'
-import { Joke } from '../../jokes/schemas/joke.schema'
 
 export type UserDocument = User & Document
 

@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import {RoleEntity } from '../../roles/entities/role.entity'
-import {StatusEntity } from '../../statuses/entities/status.entity'
+import { Group } from '../../groups/schemas/group.schema'
+import { Role } from '../../roles/schemas/role.schema'
+import { Status } from '../../statuses/schemas/status.schema'
 
 @ObjectType('User')
 export class UserDTO {
@@ -17,9 +18,13 @@ export class UserDTO {
     @Field(() => String)
     password: string
 
-    @Field(() => RoleEntity)
-    role: RoleEntity
+    @Field(() => Role)
+    role: Role
 
-    @Field(() => StatusEntity)
-    status: StatusEntity
+    @Field(() => Status)
+    status: Status
+
+    @Field(() => Group)
+    groups: Group[]
+
 }

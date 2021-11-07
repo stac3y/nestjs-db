@@ -8,7 +8,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
 import { GroupsService } from 'src/groups/groups.service'
-// import { Group, GroupDocument } from 'src/groups/schemas/group.schema'
 import { JokesService } from 'src/jokes/jokes.service'
 import { LevelsService } from 'src/levels/levels.service'
 import { RolesService } from 'src/roles/roles.service'
@@ -33,7 +32,6 @@ export class UsersService {
 
     async createUser(input: UserDTO): Promise<User> {
         try {
-            
             const user = new this._userModel(input)
 
             return await user.save()
@@ -42,23 +40,6 @@ export class UsersService {
             throw new InternalServerErrorException(error)
         }
     }
-
-    /* async addUserToGroup(
-        user: UserEntity,
-        group: GroupEntity,
-    ): Promise<UserInGroup> {
-        try {
-            const userInGroup = this._userInGroupRepository.create({
-                user,
-                group,
-            })
-
-            return await this._userInGroupRepository.save(userInGroup)
-        } catch (error) {
-            this._logger.error(error, 'addUserToGroup method error')
-            throw new InternalServerErrorException(error)
-        }
-    } */
 
     async getUserById(id: string): Promise<User> {
         try {
@@ -83,7 +64,7 @@ export class UsersService {
     }
 
     async createEntities(): Promise<void> {
-       const level = await this._levelsService.createLevel({
+        const level = await this._levelsService.createLevel({
             name: 'high',
         })
 
@@ -108,6 +89,7 @@ export class UsersService {
             password: 'qwerty',
             role,
             status,
+            groups: [group],
         })
 
         await this._jokesService.createJoke({
@@ -119,8 +101,6 @@ export class UsersService {
             user,
         })
 
-        await this.addUserToGroup(user, group)
-
         user = await this.createUser({
             name: 'User',
             surname: 'Surname',
@@ -128,6 +108,7 @@ export class UsersService {
             password: '123456',
             role,
             status,
+            groups: [group],
         })
 
         await this._jokesService.createJoke({
@@ -138,12 +119,10 @@ export class UsersService {
             view: 400,
             user,
         })
-
-        await this.addUserToGroup(user, group)
     }
 
     async getEntities(amount: number): Promise<ResultType> {
-        const users = await this._usersRepository.find({ take: amount })
+        const users = await this._userModel.find().limit(amount)
         if (users.length <= 0) {
             throw new NotFoundException(`Could not find ${amount} users`)
         }
@@ -156,22 +135,16 @@ export class UsersService {
         return response
     }
 
-    async getEntity(user: UserEntity): Promise<EntitiesType> {
-        const joke = await this._jokesService.getJokeByUserId(user.id)
-        const status = await this._statusesService.getStatusById(user.statusId)
-        const role = await this._rolesService.getRoleById(user.roleId)
-        const userInGroup = await this._userInGroupRepository.findOne({
-            where: {
-                user,
-            },
-        })
-        if (!userInGroup) {
-            throw new NotFoundException(`User in group not found`)
-        }
-        const group = await this._groupsService.getGroupById(
-            userInGroup.groupId,
+    async getEntity(user: User): Promise<EntitiesType> {
+        const status = await this._statusesService.getStatusById(
+            user.status._id,
         )
-        const level = await this._levelsService.getLevelById(group.levelId)
+        const role = await this._rolesService.getRoleById(user.role._id)
+        const group = await this._groupsService.getGroupById(
+            user.groups[0]?._id,
+        )
+        const level = await this._levelsService.getLevelById(group.level._id)
+        const joke = await this._jokesService.getJokeByUserId(user._id)
         const response: EntitiesType = {
             group,
             joke,

@@ -1,5 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose'
-import { Document } from 'mongoose'
+import { Document, Types } from 'mongoose'
+
+import { User } from '../../users/schemas/user.schema'
 
 export type JokeDocument = Joke & Document
 
@@ -23,6 +25,9 @@ export class Joke {
 
     @Prop({ required: true })
     view: number
+
+    @Prop({ type: Types.ObjectId, required: false, ref: 'User' })
+    user: User
 
 }
 
