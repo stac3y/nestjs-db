@@ -8,6 +8,11 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { GroupEntity } from 'src/groups/entities/group.entity'
+import { GroupsService } from 'src/groups/groups.service'
+import { JokesService } from 'src/jokes/jokes.service'
+import { LevelsService } from 'src/levels/levels.service'
+import { RolesService } from 'src/roles/roles.service'
+import { StatusesService } from 'src/statuses/stasuses.service'
 
 import { UserDTO } from './dtos/user.dto'
 import { UserInGroup } from './entities/user-in-group.entity'
@@ -22,6 +27,11 @@ export class UsersService {
         private readonly _usersRepository: Repository<UserEntity>,
         @InjectRepository(UserInGroup)
         private readonly _userInGroupRepository: Repository<UserInGroup>,
+        private readonly _groupsService: GroupsService,
+        private readonly _jokesService: JokesService,
+        private readonly _levelsService: LevelsService,
+        private readonly _rolesService: RolesService,
+        private readonly _statusesService: StatusesService,
     ) {}
 
     async createUser(input: UserDTO): Promise<UserEntity> {
@@ -85,5 +95,65 @@ export class UsersService {
 
             throw new InternalServerErrorException(error)
         }
+    }
+
+    async createEntities(): Promise<void> {
+        const level = await this._levelsService.createLevel({
+            name: 'high',
+        })
+
+        const group = await this._groupsService.createGroup({
+            name: 'Group1',
+            shortname: '1',
+            level,
+        })
+
+        const role = await this._rolesService.createRole({
+            name: 'user',
+        })
+
+        const status = await this._statusesService.createStatus({
+            name: 'online',
+        })
+
+        let user = await this.createUser({
+            name: 'Anastasia',
+            surname: 'Starina',
+            login: 'stac3y',
+            password: 'qwerty',
+            role,
+            status,
+        })
+
+        await this._jokesService.createJoke({
+            name: 'Some joke',
+            text: 'Some joke text',
+            rate: 4,
+            like: 100,
+            view: 500,
+            user,
+        })
+
+        await this.addUserToGroup(user, group)
+
+        user = await this.createUser({
+            name: 'User',
+            surname: 'Surname',
+            login: 'user',
+            password: '123456',
+            role,
+            status,
+        })
+
+        await this._jokesService.createJoke({
+            name: 'Another one joke',
+            text: 'Another joke text',
+            rate: 5,
+            like: 250,
+            view: 400,
+            user,
+        })
+
+        await this.addUserToGroup(user, group)
     }
 }

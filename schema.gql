@@ -1,0 +1,20 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CreateEntities {
+  message: String!
+}
+
+type Query {
+  """Returns pong"""
+  ping: String!
+}
+
+type Mutation {
+  createEntities(input: CreateEntitiesInput!): CreateEntities!
+}
+
+input CreateEntitiesInput {
+  amount: Float!
+}
